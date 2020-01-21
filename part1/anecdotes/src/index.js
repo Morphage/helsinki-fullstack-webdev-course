@@ -1,37 +1,49 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const App = (props) => {
+const AnecdoteOfTheDay = (props) => {
     const [selected, setSelected] = useState(0)
     const nextAnecdote = () => {
         setSelected(Math.floor(Math.random() * anecdotes.length))
     }
 
-    const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
     const vote = (selectedAnecdote) => () => {
-        const updatedVotes = [...votes]
+        const updatedVotes = [...props.votes]
         updatedVotes[selectedAnecdote] += 1
-        setVotes(updatedVotes)
+        props.setVotes(updatedVotes)
     }
-
-    const mostVotes = Math.max(...votes)
-    const anecdoteWithMostVotes = votes.indexOf(mostVotes)
 
     return (
         <div>
-            <div>
-                <h1>Anecdote of the day</h1>
-                {props.anecdotes[selected]} <br />
-                has {votes[selected]} votes <br />
-                <button onClick={vote(selected)}>vote</button>
-                <button onClick={nextAnecdote}>next anectode</button>
-            </div>
+            <h1>Anecdote of the day</h1>
+            {props.anecdotes[selected]} <br />
+            has {props.votes[selected]} votes <br />
+            <button onClick={vote(selected)}>vote</button>
+            <button onClick={nextAnecdote}>next anectode</button>
+        </div>
+    )
+}
 
-            <div>
-                <h1>Anecdote with most votes</h1>
-                {props.anecdotes[anecdoteWithMostVotes]} <br />
-                has {mostVotes} votes
-            </div>
+const AnecdoteWithMostVotes = (props) => {
+    const mostVotes = Math.max(...props.votes)
+    const anecdoteWithMostVotes = props.votes.indexOf(mostVotes)
+
+    return (
+        <div>
+            <h1>Anecdote with most votes</h1>
+            {props.anecdotes[anecdoteWithMostVotes]} <br />
+            has {mostVotes} votes
+    </div>
+    )
+}
+
+const App = (props) => {
+    const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+    return (
+        <div>
+            <AnecdoteOfTheDay      anecdotes={props.anecdotes} votes={votes} setVotes={setVotes}/>
+            <AnecdoteWithMostVotes anecdotes={props.anecdotes} votes={votes} />
         </div>
     )
 }
