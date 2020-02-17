@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Country from './components/Country'
+import CountrySearchResults from './components/CountrySearchResults'
 
 const App = () => {
     const [countries, setCountries] = useState([])
@@ -14,28 +14,13 @@ const App = () => {
     }, [])
 
     const [filter, setFilter] = useState('')
-
-    const filteredCountries = filter === ''
-        ? []
-        : countries.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
-
     const handleFilterChange = (event) => {
         setFilter(event.target.value)
     }
 
-    const handleShow = () => {}
-
-    const Countries = ({ countries }) => {
-        if (countries.length === 1) {
-            return <Country data={countries[0]} isMinimized={false} />
-        } else {
-            return countries.map(country =>
-                <div key={country.name}>
-                    {country.name} <button onClick={handleShow}>show</button>
-                </div>
-            )
-        }
-    }
+    const filteredCountries = filter === ''
+        ? []
+        : countries.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
 
     return (
         <div>
@@ -46,7 +31,7 @@ const App = () => {
             }
             {
                 (filteredCountries.length < 10) &&
-                <Countries countries={filteredCountries} />
+                <CountrySearchResults countries={filteredCountries} />
             }
         </div>
     )
