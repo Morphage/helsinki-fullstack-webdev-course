@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import personsService from '../services/persons'
 
 const PersonForm = ({ persons, setPersons }) => {
     const [newName, setNewName] = useState('')
@@ -12,8 +13,31 @@ const PersonForm = ({ persons, setPersons }) => {
         setNewNumber(event.target.value)
     }
 
-    const hasPersonAlreadyBeenAdded = (name) => {
-        return persons.filter(p => p.name === name).length > 0
+    const findPersonWith = (name) => {
+        return persons.find(p => p.name === name)
+    }
+
+    const createPerson = (newPerson) => {
+        personsService
+            .create(newPerson)
+            .then(createdPerson => {
+                setPersons(persons.concat(createdPerson))
+                setNewName('')
+                setNewNumber('')
+            })
+    }
+
+    const updatePerson = (personToUpdate) => {
+        personsService
+            .update(personToUpdate.id, personToUpdate)
+            .then(() => {
+                const updatedPersons = persons.map(p =>
+                    p.id === personToUpdate.id ? personToUpdate : p
+                )
+                setPersons(updatedPersons)
+                setNewName('')
+                setNewNumber('')
+            })
     }
 
     const addPerson = (event) => {
@@ -22,14 +46,16 @@ const PersonForm = ({ persons, setPersons }) => {
         if (newName === '' || newNumber === '')
             return
 
-        if (hasPersonAlreadyBeenAdded(newName)) {
-            return alert(`${newName} is already added to phonebook`)
+        const person = { name: newName, number: newNumber }
+        const existingPerson = findPersonWith(newName)
+        if (existingPerson) {
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                person.id = existingPerson.id
+                updatePerson(person)
+            }
+        } else {
+            createPerson(person)
         }
-
-        const newPerson = { name: newName, number: newNumber }
-        setPersons(persons.concat(newPerson))
-        setNewName('')
-        setNewNumber('')
     }
 
     return (

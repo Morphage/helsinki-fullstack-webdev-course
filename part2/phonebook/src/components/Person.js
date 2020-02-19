@@ -2,7 +2,7 @@ import React from 'react'
 
 const Person = (props) => {
     return (
-        <div>{props.name} {props.number}</div>
+        <span>{props.name} {props.number}</span>
     )
 }
 
