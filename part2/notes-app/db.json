@@ -29,6 +29,12 @@
       "date": "2020-02-17T18:15:21.780Z",
       "important": true,
       "id": 5
+    },
+    {
+      "content": "Teststetet",
+      "date": "2020-02-20T18:03:37.956Z",
+      "important": false,
+      "id": 6
     }
   ]
 }
