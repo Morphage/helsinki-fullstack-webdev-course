@@ -2,7 +2,15 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
-app.use(bodyParser.json())
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
+
+app.use(bodyParser.json(), requestLogger)
 
 let notes = [
     {
@@ -42,8 +50,8 @@ app.get('/notes/:id', (req, res) => {
 
 const generateId = () => {
     const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
+        ? Math.max(...notes.map(n => n.id))
+        : 0
     return maxId + 1
 }
 
@@ -62,7 +70,7 @@ app.post('/notes', (request, response) => {
         date: new Date(),
         id: generateId()
     }
-    
+
     notes = notes.concat(note)
 
     response.json(note)
@@ -74,6 +82,12 @@ app.delete('/notes/:id', (request, response) => {
 
     response.status(204).end()
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
