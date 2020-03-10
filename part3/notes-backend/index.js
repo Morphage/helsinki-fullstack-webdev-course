@@ -12,6 +12,7 @@ const requestLogger = (request, response, next) => {
 }
 
 app.use(bodyParser.json(), requestLogger)
+app.use(express.static('build'))
 app.use(cors())
 
 let notes = [
