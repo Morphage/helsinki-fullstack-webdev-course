@@ -38,13 +38,30 @@ app.get('/api/persons/:id', (request, response) => {
     })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    Contact.findByIdAndDelete(request.params.id).then(_ => {
-        response.status(204).end()
-    })
+app.delete('/api/persons/:id', (request, response, next) => {
+    Contact.findByIdAndDelete(request.params.id)
+        .then(_ => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const contact = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Contact.findByIdAndUpdate(request.params.id, contact, { new: true })
+        .then(updatedContact => {
+            response.json(updatedContact.toJSON())
+        })
+        .catch(error => next(error))
+})
+
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     const { name, number } = body
@@ -59,10 +76,24 @@ app.post('/api/persons', (request, response) => {
         number
     })
 
-    contact.save().then(savedContact => {
-        response.json(savedContact.toJSON())
-    })
+    contact.save()
+        .then(savedContact => {
+            response.json(savedContact.toJSON())
+        })
+        .catch(error => next(error))
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

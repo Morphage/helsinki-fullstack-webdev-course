@@ -76,10 +76,8 @@ const PersonForm = ({ persons, setPersons, setNotification }) => {
         const person = { name: newName, number: newNumber }
         const existingPerson = findPersonWith(newName)
         if (existingPerson) {
-            if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-                person.id = existingPerson.id
-                updatePerson(person)
-            }
+            person.id = existingPerson.id
+            updatePerson(person)
         } else {
             createPerson(person)
         }
