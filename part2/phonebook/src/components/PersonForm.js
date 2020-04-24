@@ -32,6 +32,12 @@ const PersonForm = ({ persons, setPersons, setNotification }) => {
                 setNewName('')
                 setNewNumber('')
             })
+            .catch(error => {
+                setNotification({
+                    message: `${error.response.data.error}`,
+                    level: 'error'
+                })
+            })
     }
 
     const updatePerson = (personToUpdate) => {
