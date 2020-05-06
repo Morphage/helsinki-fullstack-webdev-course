@@ -18,6 +18,7 @@ const noteSchema = new mongoose.Schema({
 noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
+    returnedObject.date = new Date(returnedObject.date).toJSON()
     delete returnedObject._id
     delete returnedObject.__v
   }
