@@ -14,7 +14,7 @@ const initialNotes = [
 ]
 
 const nonExistingId = async () => {
-  const note = new Note({ content: 'willremovethissoon' })
+  const note = new Note({ content: 'willremovethissoon', date: Date.now() })
   await note.save()
   await note.remove()
 
