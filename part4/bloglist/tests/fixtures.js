@@ -15,7 +15,8 @@ const biggerBlogList = [
     title: "React patterns",
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
-    likes: 7, __v: 0
+    likes: 7, 
+    __v: 0
   },
   {
     _id: "5a422aa71b54a676234d17f8",

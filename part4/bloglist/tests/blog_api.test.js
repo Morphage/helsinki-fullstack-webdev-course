@@ -79,6 +79,35 @@ test('should return HTTP 400 Bad Request if trying to create a new blog post wit
   expect(response.body).toHaveLength(Fixtures.biggerBlogList.length)
 })
 
+test('should delete a blog post successfully', async () => {
+  const blogToDeleteId = Fixtures.biggerBlogList[0]._id
+
+  await api
+    .delete(`/api/blogs/${blogToDeleteId}`)
+    .expect(204)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(Fixtures.biggerBlogList.length - 1)
+})
+
+test('should update a blog post successfully', async () => {
+  const blogToUpdateId = Fixtures.biggerBlogList[0]._id
+  const updatedBlog = {
+    likes: 15
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdateId}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(Fixtures.biggerBlogList.length)
+
+  const blog = response.body.find(blog => blog.id === blogToUpdateId)
+  expect(blog.likes).toEqual(updatedBlog.likes) 
+})
 
 afterAll(() => {
   mongoose.connection.close()
