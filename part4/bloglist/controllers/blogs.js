@@ -10,8 +10,7 @@ blogsRouter.get('/blogs', async (request, response) => {
 
 blogsRouter.post('/blogs', async (request, response) => {
   const body = request.body
-  const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   const user = await User.findById(decodedToken.id)
 
@@ -39,13 +38,5 @@ blogsRouter.delete('/blogs/:id', async (request, response) => {
   await Blog.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
-
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    return authorization.substring(7)
-  }
-  return null
-}
 
 module.exports = blogsRouter
