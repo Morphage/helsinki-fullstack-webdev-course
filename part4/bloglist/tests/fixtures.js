@@ -15,7 +15,8 @@ const biggerBlogList = [
     title: "React patterns",
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
-    likes: 7, 
+    likes: 7,
+    user: "5f01cbc95d6d697784695f03",
     __v: 0
   },
   {
@@ -60,7 +61,15 @@ const biggerBlogList = [
   }
 ]
 
+const testUser = {
+  _id: "5f01cbc95d6d697784695f03",
+  username: "mluukkai",
+  passwordHash: "$2b$10$mmPRjdU1mqJGeTC.wFLL3e9AyV0Mc1hM.YJSxKuBPRjaRY8x7W8s.",
+  __v: 0
+}
+
 module.exports = {
   listWithOneBlog,
-  biggerBlogList
+  biggerBlogList,
+  testUser
 }
